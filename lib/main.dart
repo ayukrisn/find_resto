@@ -1,7 +1,7 @@
 import 'package:find_resto/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'util.dart';
-import 'theme.dart';
+import 'theme/util.dart';
+import 'theme/theme.dart';
 
 void main() {
   runApp(const MyApp());
