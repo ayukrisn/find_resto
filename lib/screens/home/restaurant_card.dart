@@ -34,9 +34,12 @@ class RestaurantCard extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15.0),
-                  child: Image.asset(
-                    'assets/images/restaurant.jpeg',
-                    fit: BoxFit.cover,
+                  child: AspectRatio(
+                    aspectRatio: 4 / 3,
+                    child: Image.network(
+                      'https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
