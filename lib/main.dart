@@ -1,10 +1,24 @@
+import 'package:find_resto/data/api/restaurant_service.dart';
+import 'package:find_resto/provider/home/restaurant_list_provider.dart';
 import 'package:find_resto/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'theme/util.dart';
 import 'theme/theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      Provider(
+        create: (context) => RestaurantService(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) =>
+            RestaurantListProvider(context.read<RestaurantService>()),
+      ),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -99,4 +113,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-

@@ -1,8 +1,11 @@
+import 'package:find_resto/data/model/restaurant.dart';
 import 'package:flutter/material.dart';
 
 class RestaurantCard extends StatelessWidget {
+  final Restaurant restaurant;
   const RestaurantCard({
     super.key,
+    required this.restaurant
   });
 
   @override
@@ -57,7 +60,7 @@ class RestaurantCard extends StatelessWidget {
                             dimension: 2,
                           ),
                           Text(
-                            "4.2",
+                            restaurant.rating.toString(),
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall
@@ -76,7 +79,7 @@ class RestaurantCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Melting Pot",
+                    restaurant.name,
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium
@@ -100,7 +103,7 @@ class RestaurantCard extends StatelessWidget {
                           Opacity(
                             opacity: 0.5,
                             child: Text(
-                              "Medan",
+                              restaurant.city,
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
@@ -112,7 +115,7 @@ class RestaurantCard extends StatelessWidget {
                   Opacity(
                     opacity: 0.3,
                     child: Text(
-                      "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. ...",
+                      restaurant.description,
                       style: Theme.of(context).textTheme.bodySmall,
                       maxLines: 2, // Set the maximum number of lines
                       overflow: TextOverflow
