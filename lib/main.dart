@@ -1,5 +1,6 @@
 import 'package:find_resto/data/api/restaurant_service.dart';
 import 'package:find_resto/provider/home/restaurant_list_provider.dart';
+import 'package:find_resto/screens/detail/detail_screen.dart';
 import 'package:find_resto/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
       theme: theme.light(),
       darkTheme: theme.dark(),
       themeMode: ThemeMode.system,
-      home: HomeScreen(),
+      home: DetailScreen(),
     );
   }
 }
