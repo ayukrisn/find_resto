@@ -24,19 +24,25 @@ class _HomeScreenState extends State<HomeScreen> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final double statusBarHeight = MediaQuery.of(context).padding.top;
+
     return Scaffold(
       // appBar: AppBar(title: const Text("Find Resto")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
+            Container(
+              height: statusBarHeight,
+            ),
             Text("Mau makan apa hari ini?",
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge
                     ?.copyWith(fontWeight: FontWeight.bold)),
-            Expanded(child: Consumer<RestaurantListProvider>(
+            Consumer<RestaurantListProvider>(
                 builder: (context, value, child) {
               return switch (value.resultState) {
                 RestaurantListLoadingState() => const Center(
@@ -44,10 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 RestaurantListLoadedState(data: var restaurantList) =>
                   ListView.builder(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.only(top: 12),
+                      physics: NeverScrollableScrollPhysics(),
                       itemCount: restaurantList.length,
                       itemBuilder: (context, index) {
                         final restaurant = restaurantList[index];
-
+            
                         return RestaurantCard(
                           restaurant: restaurant,
                           onTap: () {
@@ -64,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 _ => const SizedBox(),
               };
-            })),
+            }),
           ],
         ),
       ),

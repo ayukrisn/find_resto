@@ -27,6 +27,8 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double statusBarHeight = MediaQuery.of(context).padding.top;
+
     return Scaffold(
       body: Consumer<RestaurantDetailProvider>(
         builder: (context, value, child) {
@@ -36,6 +38,7 @@ class _DetailScreenState extends State<DetailScreen> {
               ),
             RestaurantDetailLoadedState(data: var restaurantDetail) =>
               BodyOfDetailScreenWidget(
+                statusBarHeight: statusBarHeight,
                 restaurantDetail: restaurantDetail,
               ),
             RestaurantDetailErrorState(error: var message) => Center(
@@ -51,8 +54,9 @@ class _DetailScreenState extends State<DetailScreen> {
 
 class BodyOfDetailScreenWidget extends StatelessWidget {
   final RestaurantDetail restaurantDetail;
+  final double statusBarHeight;
 
-  const BodyOfDetailScreenWidget({super.key, required this.restaurantDetail});
+  const BodyOfDetailScreenWidget({super.key, required this.restaurantDetail, required this.statusBarHeight});
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +82,7 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                   ),
                 )),
             Positioned(
-              top: 16,
+              top: 16 + statusBarHeight,
               left: 16,
               child: CircleAvatar(
                 radius: 25,
@@ -251,10 +255,11 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                         .titleMedium
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 12),
+                  // const SizedBox(height: 12),
                   ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.only(top: 8),
                       scrollDirection: Axis.vertical,
                       itemCount: restaurantDetail.customerReviews.length,
                       itemBuilder: (context, index) {
