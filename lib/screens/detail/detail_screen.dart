@@ -1,11 +1,62 @@
+import 'package:find_resto/data/model/restaurant_detail_response.dart';
+import 'package:find_resto/static/restaurant_detail_result_state.dart';
+import 'package:find_resto/provider/detail/restaurant_detail_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
+  final String restaurantId;
+
+  const DetailScreen({super.key, required this.restaurantId});
+
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context
+          .read<RestaurantDetailProvider>()
+          .getRestaurantDetail(widget.restaurantId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
+      body: Consumer<RestaurantDetailProvider>(
+        builder: (context, value, child) {
+          return switch (value.resultState) {
+            RestaurantDetailLoadingState() => const Center(
+                child: CircularProgressIndicator(),
+              ),
+            RestaurantDetailLoadedState(data: var restaurantDetail) =>
+              BodyOfDetailScreenWidget(
+                restaurantDetail: restaurantDetail,
+              ),
+            RestaurantDetailErrorState(error: var message) => Center(
+                child: Text(message),
+              ),
+            _ => const SizedBox(),
+          };
+        },
+      ),
+    );
+  }
+}
+
+class BodyOfDetailScreenWidget extends StatelessWidget {
+  final RestaurantDetail restaurantDetail;
+
+  const BodyOfDetailScreenWidget({super.key, required this.restaurantDetail});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -21,11 +72,27 @@ class DetailScreen extends StatelessWidget {
                   child: AspectRatio(
                     aspectRatio: 4 / 3,
                     child: Image.network(
-                      'https://restaurant-api.dicoding.dev/images/large/43',
+                      'https://restaurant-api.dicoding.dev/images/large/${restaurantDetail.pictureId}',
                       fit: BoxFit.cover,
                     ),
                   ),
                 )),
+            Positioned(
+              top: 16,
+              left: 16,
+              child: CircleAvatar(
+                radius: 25,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    )),
+              ),
+            ),
             Container(
               margin: EdgeInsets.only(top: 280),
               decoration: BoxDecoration(
@@ -41,7 +108,7 @@ class DetailScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Melting Pot",
+                        restaurantDetail.name,
                         style: Theme.of(context)
                             .textTheme
                             .headlineSmall
@@ -58,7 +125,7 @@ class DetailScreen extends StatelessWidget {
                             dimension: 8,
                           ),
                           Text(
-                            "4.3",
+                            restaurantDetail.rating.toString(),
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge
@@ -82,7 +149,7 @@ class DetailScreen extends StatelessWidget {
                       Opacity(
                         opacity: 0.5,
                         child: Text(
-                          "Jln. Pandeglang no 19, Medan",
+                          "${restaurantDetail.address}, ${restaurantDetail.city}",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ),
@@ -97,12 +164,16 @@ class DetailScreen extends StatelessWidget {
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
-                  Row(
-                    spacing: 2,
-                    children: [
-                      CategoryCard(category: "Italia"),
-                      CategoryCard(category: "Modern"),
-                    ],
+                  SizedBox(
+                    height: 36,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: restaurantDetail.categories.length,
+                        itemBuilder: (context, index) {
+                          final category = restaurantDetail.categories[index];
+
+                          return CategoryCard(category: category.name);
+                        }),
                   ),
                   const SizedBox(height: 24),
                   Text(
@@ -114,7 +185,7 @@ class DetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   ReadMoreText(
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et ullamcorper leo. Integer scelerisque vehicula tortor, vitae fringilla ipsum molestie at. Donec ut accumsan purus. Pellentesque a facilisis velit. Maecenas rhoncus non nulla ut faucibus. Sed vehicula sit amet odio condimentum sagittis. Vestibulum tempor neque id tellus placerat bibendum. Donec dictum massa eu libero fringilla euismod. Pellentesque venenatis posuere metus in finibus. Pellentesque id ultricies dui. Curabitur dictum, ligula eu ultrices aliquam, nisl mauris convallis eros, ac viverra arcu turpis vitae dui. Sed vitae sapien risus. Fusce volutpat est eget sem iaculis tempus. Mauris ut ante sollicitudin, gravida lacus non, accumsan ante. Aliquam erat volutpat. Vivamus porttitor in ipsum at sollicitudin. Donec vitae diam enim. Vestibulum convallis leo vitae odio sodales finibus. Mauris dictum vitae nisl ac convallis. Aliquam nulla lectus, maximus vitae purus et, tempor condimentum est. Donec sit amet neque sem. Sed tellus purus, tempus et eros sed, efficitur auctor risus. Donec feugiat dolor nec mi viverra fermentum. Nulla dignissim dolor non massa aliquam, sit amet hendrerit elit ullamcorper. Nunc vitae erat consequat, consectetur felis ut, viverra ante. Integer quis enim bibendum, dapibus neque sit amet, volutpat ligula. Cras scelerisque a erat vel congue. Maecenas eleifend ipsum convallis ligula lacinia condimentum. Suspendisse potenti.',
+                    restaurantDetail.description,
                     trimLines: 3,
                     trimMode: TrimMode.Line,
                     trimCollapsedText: 'Lihat selengkapnya',
@@ -135,14 +206,20 @@ class DetailScreen extends StatelessWidget {
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-                  SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          FoodCard(name: "Paket rosemary"),
-                          FoodCard(name: "Toastie salmon"),
-                        ],
-                      )),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: 124,
+                      maxHeight: 164, // Set your desired maximum height
+                    ),
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: restaurantDetail.menus.foods.length,
+                        itemBuilder: (context, index) {
+                          final food = restaurantDetail.menus.foods[index];
+
+                          return FoodCard(name: food.name);
+                        }),
+                  ),
                   const SizedBox(height: 24),
                   Text(
                     "Minuman",
@@ -152,14 +229,20 @@ class DetailScreen extends StatelessWidget {
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
-                  SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          FoodCard(name: "Es Jeruk"),
-                          FoodCard(name: "Sirup Marjan"),
-                        ],
-                      )),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: 124,
+                      maxHeight: 164, // Set your desired maximum height
+                    ),
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: restaurantDetail.menus.drinks.length,
+                        itemBuilder: (context, index) {
+                          final drink = restaurantDetail.menus.drinks[index];
+
+                          return FoodCard(name: drink.name);
+                        }),
+                  ),
                   const SizedBox(height: 24),
                   Text(
                     "Review dan Rating",
@@ -169,23 +252,30 @@ class DetailScreen extends StatelessWidget {
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
-                  RatingCard(),
-                  const SizedBox(height: 6),
-                  RatingCard()
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemCount: restaurantDetail.customerReviews.length,
+                      itemBuilder: (context, index) {
+                        final review = restaurantDetail.customerReviews[index];
+
+                        return RatingCard(review: review);
+                      }),
                 ],
               ),
             )
           ]),
         ],
       ),
-    ));
+    );
   }
 }
 
 class RatingCard extends StatelessWidget {
-  const RatingCard({
-    super.key,
-  });
+  final CustomerReview review;
+
+  const RatingCard({super.key, required this.review});
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +316,7 @@ class RatingCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Ikbal",
+                      review.name,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(
@@ -235,7 +325,7 @@ class RatingCard extends StatelessWidget {
                     Opacity(
                       opacity: 0.5,
                       child: Text(
-                        "12 Januari 2019",
+                        review.date,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ),
@@ -247,8 +337,7 @@ class RatingCard extends StatelessWidget {
               indent: 4,
               endIndent: 4,
             ),
-            Text("Makanan dengan lauk yang enak",
-                style: Theme.of(context).textTheme.titleMedium),
+            Text(review.review, style: Theme.of(context).textTheme.titleMedium),
           ],
         ),
       ),
