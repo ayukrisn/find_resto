@@ -42,11 +42,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     .textTheme
                     .titleLarge
                     ?.copyWith(fontWeight: FontWeight.bold)),
-            Consumer<RestaurantListProvider>(
-                builder: (context, value, child) {
+            const SizedBox(
+              height: 8,
+            ),
+            Text("Cari restoran favoritmu di sini.",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium),
+            Consumer<RestaurantListProvider>(builder: (context, value, child) {
               return switch (value.resultState) {
                 RestaurantListLoadingState() => const Center(
-                    child: CircularProgressIndicator(),
+                    child: Center(child: CircularProgressIndicator()),
                   ),
                 RestaurantListLoadedState(data: var restaurantList) =>
                   ListView.builder(
@@ -56,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: restaurantList.length,
                       itemBuilder: (context, index) {
                         final restaurant = restaurantList[index];
-            
+
                         return RestaurantCard(
                           restaurant: restaurant,
                           onTap: () {

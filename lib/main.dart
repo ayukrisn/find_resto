@@ -3,6 +3,7 @@ import 'package:find_resto/provider/detail/restaurant_detail_provider.dart';
 import 'package:find_resto/provider/home/restaurant_list_provider.dart';
 import 'package:find_resto/screens/detail/detail_screen.dart';
 import 'package:find_resto/screens/home/home_screen.dart';
+import 'package:find_resto/screens/review/review_screen.dart';
 import 'package:find_resto/static/navigation_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,12 +43,16 @@ class MyApp extends StatelessWidget {
       theme: theme.light(),
       darkTheme: theme.dark(),
       themeMode: ThemeMode.system,
+      // home: ReviewScreen(),
       initialRoute: NavigationRoute.homeRoute.name,
       routes: {
         NavigationRoute.homeRoute.name: (context) => const HomeScreen(),
         NavigationRoute.detailRoute.name: (context) => DetailScreen(
               restaurantId: ModalRoute.of(context)?.settings.arguments as String,
             ),
+            NavigationRoute.addReviewRoute.name: (context) => ReviewScreen(
+              restaurant: ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>
+            )
       },
     );
   }

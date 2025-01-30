@@ -1,4 +1,5 @@
 import 'package:find_resto/data/model/restaurant_detail_response.dart';
+import 'package:find_resto/static/navigation_route.dart';
 import 'package:find_resto/static/restaurant_detail_result_state.dart';
 import 'package:find_resto/provider/detail/restaurant_detail_provider.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,10 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
   final RestaurantDetail restaurantDetail;
   final double statusBarHeight;
 
-  const BodyOfDetailScreenWidget({super.key, required this.restaurantDetail, required this.statusBarHeight});
+  const BodyOfDetailScreenWidget(
+      {super.key,
+      required this.restaurantDetail,
+      required this.statusBarHeight});
 
   @override
   Widget build(BuildContext context) {
@@ -248,18 +252,33 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                         }),
                   ),
                   const SizedBox(height: 24),
-                  Text(
-                    "Review dan Rating",
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Review dan Rating",
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, NavigationRoute.addReviewRoute.name,
+                                arguments: {
+                                  'id': restaurantDetail.id,
+                                  'name': restaurantDetail.name
+                                });
+                          },
+                          child: Text("Tambahkan Review"))
+                    ],
                   ),
                   // const SizedBox(height: 12),
                   ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      padding: EdgeInsets.only(top: 8),
+                      padding: EdgeInsets.only(top: 4),
                       scrollDirection: Axis.vertical,
                       itemCount: restaurantDetail.customerReviews.length,
                       itemBuilder: (context, index) {
