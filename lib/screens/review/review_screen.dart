@@ -17,11 +17,51 @@ class _ReviewScreenState extends State<ReviewScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _reviewController = TextEditingController();
 
+  late FocusNode name;
+  late FocusNode review;
+
+  final isValid = ValueNotifier(false);
+  final isVisible = ValueNotifier(true);
+
+  @override
+  void initState() {
+    super.initState();
+    name = FocusNode();
+    review = FocusNode();
+  }
+
   @override
   void dispose() {
+    super.dispose();
+    name.dispose();
+    review.dispose();
     _nameController.dispose();
     _reviewController.dispose();
-    super.dispose();
+  }
+
+  String? get errorName {
+    final text = _nameController.value.text;
+    if (text.isEmpty) {
+      return 'Nama tidak boleh kosong.';
+    }
+    return null;
+  }
+
+  String? get errorReview {
+    final text = _reviewController.value.text;
+    if (text.isEmpty) {
+      return 'Review tidak boleh kosong.';
+    } else if (text.length < 5) {
+      return 'Review minimal terdiri dari 5 huruf.';
+    }
+    return null;
+  }
+
+  bool isValided() {
+    if (errorName != null || errorReview != null) {
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -75,31 +115,52 @@ class _ReviewScreenState extends State<ReviewScreen> {
               key: _formKey,
               child: Column(
                 children: [
-                  TextFormField(
-                    controller: _nameController,
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'Tolong masukkan namamu'
-                        : null,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Nama',
-                    ),
-                  ),
+                  ValueListenableBuilder(
+                      valueListenable: _nameController,
+                      builder: (context, v, _) {
+                        return TextFormField(
+                          autofocus: true,
+                          focusNode: name,
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Nama',
+                            errorText: name.hasFocus ? errorName : null,
+                          ),
+                          onChanged: (_) {
+                            isValid.value = isValided();
+                          },
+                          onFieldSubmitted: (_) {
+                            name.unfocus();
+                            FocusScope.of(context).requestFocus(review);
+                          },
+                        );
+                      }),
                   const SizedBox(
                     height: 16,
                   ),
-                  TextFormField(
-                    controller: _reviewController,
-                    validator: (value) => value == null || value.isEmpty
-                        ? 'Tolong masukkan reviewmu'
-                        : null,
-                    minLines: 1,
-                    maxLines: null,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Review',
-                    ),
-                  ),
+                  ValueListenableBuilder(
+                      valueListenable: _reviewController,
+                      builder: (context, v, _) {
+                        return TextFormField(
+                          autofocus: true,
+                          focusNode: review,
+                          controller: _reviewController,
+                          minLines: 1,
+                          maxLines: null,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Review',
+                            errorText: review.hasFocus ? errorReview : null,
+                          ),
+                          onChanged: (_) {
+                            isValid.value = isValided();
+                          },
+                          onFieldSubmitted: (_) {
+                            review.unfocus();
+                          },
+                        );
+                      }),
                 ],
               ),
             ),
@@ -108,45 +169,43 @@ class _ReviewScreenState extends State<ReviewScreen> {
             ),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      await addReviewProvider.addReview(
-                        restaurantId: widget.restaurant['id'],
-                        name: _nameController.text,
-                        review: _reviewController.text,
-                      );
-
-                      if (addReviewProvider.resultState is AddReviewDoneState) {
-                        // AlertDialog(
-                        //   title: Text("Berhasil!"),
-                        //   content: Text(
-                        //       "Reviewmu sudah ditambahkan. Terima kasih atas pendapatmu yang berharga."),
-                        //   actions: [
-                        //     TextButton(onPressed: () {
-
-                        //     }, child: Text("Kembali"))
-                        //   ],
-                        // );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Review berhasil ditambahkan!')),
-                        );
-                      } else if (addReviewProvider.resultState
-                          is AddReviewErrorState) {
-                        final errorMessage = (addReviewProvider.resultState
-                                as AddReviewErrorState)
-                            .error;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error: $errorMessage')),
-                        );
-                      }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                  child: Text("Kirim Review")),
+              child: ValueListenableBuilder(
+                valueListenable: isValid,
+                builder: (context, isEnabled, _) { 
+                  return ElevatedButton(
+                    onPressed: isValid.value
+                        ? () async {
+                            await addReviewProvider.addReview(
+                              restaurantId: widget.restaurant['id'],
+                              name: _nameController.text,
+                              review: _reviewController.text,
+                            );
+                
+                            if (addReviewProvider.resultState
+                                is AddReviewDoneState) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content:
+                                        Text('Review berhasil ditambahkan!')),
+                              );
+                            } else if (addReviewProvider.resultState
+                                is AddReviewErrorState) {
+                              final errorMessage = (addReviewProvider.resultState
+                                      as AddReviewErrorState)
+                                  .error;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Error: $errorMessage')),
+                              );
+                            }
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    child: Text("Kirim Review"));
+                }
+              ),
             ),
             if (addReviewProvider.resultState is AddReviewLoadingState)
               CircularProgressIndicator(),
