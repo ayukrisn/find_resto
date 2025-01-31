@@ -1,6 +1,7 @@
 import 'package:find_resto/data/api/restaurant_service.dart';
 import 'package:find_resto/provider/detail/restaurant_detail_provider.dart';
 import 'package:find_resto/provider/home/restaurant_list_provider.dart';
+import 'package:find_resto/provider/review/add_review_provider.dart';
 import 'package:find_resto/screens/detail/detail_screen.dart';
 import 'package:find_resto/screens/home/home_screen.dart';
 import 'package:find_resto/screens/review/review_screen.dart';
@@ -23,6 +24,10 @@ void main() {
       ChangeNotifierProvider(
         create: (context) =>
             RestaurantDetailProvider(context.read<RestaurantService>()),
+      ),
+      ChangeNotifierProvider(
+        create: (context) =>
+            AddReviewProvider(context.read<RestaurantService>()),
       ),
     ],
     child: const MyApp(),

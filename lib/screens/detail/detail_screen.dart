@@ -263,13 +263,18 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(
-                                context, NavigationRoute.addReviewRoute.name,
-                                arguments: {
+                          onPressed: () async {
+                            final bool? shouldRefresh =
+                                await Navigator.pushNamed(context,
+                                    NavigationRoute.addReviewRoute.name,
+                                    arguments: {
                                   'id': restaurantDetail.id,
                                   'name': restaurantDetail.name
-                                });
+                                }) as bool?;
+
+                            if (shouldRefresh ?? false) {
+                              context.read<RestaurantDetailProvider>().getRestaurantDetail(restaurantDetail.id);
+                            }
                           },
                           child: Text("Tambahkan Review"))
                     ],
