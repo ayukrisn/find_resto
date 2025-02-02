@@ -39,9 +39,12 @@ class RestaurantCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15.0),
                     child: AspectRatio(
                       aspectRatio: 4 / 3,
-                      child: Image.network(
-                        'https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}',
-                        fit: BoxFit.cover,
+                      child: Hero(
+                        tag: restaurant.pictureId,
+                        child: Image.network(
+                          'https://restaurant-api.dicoding.dev/images/large/${restaurant.pictureId}',
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),

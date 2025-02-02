@@ -80,9 +80,12 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                   ),
                   child: AspectRatio(
                     aspectRatio: 4 / 3,
-                    child: Image.network(
-                      'https://restaurant-api.dicoding.dev/images/large/${restaurantDetail.pictureId}',
-                      fit: BoxFit.cover,
+                    child: Hero(
+                      tag: restaurantDetail.pictureId,
+                      child: Image.network(
+                        'https://restaurant-api.dicoding.dev/images/large/${restaurantDetail.pictureId}',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 )),
