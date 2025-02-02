@@ -18,7 +18,7 @@ class RestaurantCard extends StatelessWidget {
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         elevation: 4,
-        shadowColor: Colors.black.withOpacity(0.2),
+        shadowColor: Colors.black.withValues(alpha:0.2),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 12,
@@ -54,7 +54,7 @@ class RestaurantCard extends StatelessWidget {
                     left: 4,
                     child: Card(
                       elevation: 4,
-                      shadowColor: Colors.black.withOpacity(0.5),
+                      shadowColor: Colors.black.withValues(alpha:0.5),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 2, horizontal: 4),

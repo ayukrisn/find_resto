@@ -65,7 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
               children: [
                 Material(
                   elevation: 4,
-                  shadowColor: Colors.black.withOpacity(0.1),
+                  shadowColor: Colors.black.withValues(alpha:0.1),
                   borderRadius: BorderRadius.circular(16),
                   clipBehavior: Clip.hardEdge,
                   child: Form(

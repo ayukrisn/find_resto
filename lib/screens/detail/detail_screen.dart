@@ -317,7 +317,7 @@ class RatingCard extends StatelessWidget {
       shadowColor: Theme.of(context)
           .colorScheme
           .primary
-          .withOpacity(0.1), // Add some elevation for shadow
+          .withValues(alpha:0.1), // Add some elevation for shadow
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16), // Rounded corners
       ),
@@ -391,7 +391,7 @@ class FoodCard extends StatelessWidget {
       shadowColor: Theme.of(context)
           .colorScheme
           .primary
-          .withOpacity(0.1), // Add some elevation for shadow
+          .withValues(alpha:0.1), // Add some elevation for shadow
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16), // Rounded corners
       ),
@@ -464,7 +464,7 @@ class CategoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 1,
-      shadowColor: Colors.black.withOpacity(0.2),
+      shadowColor: Colors.black.withValues(alpha:0.2),
       color: Theme.of(context).colorScheme.primary,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
