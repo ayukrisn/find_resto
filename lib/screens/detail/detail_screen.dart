@@ -407,8 +407,8 @@ class FoodCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(16.0),
               child: AspectRatio(
                 aspectRatio: 4 / 3,
-                child: Image.network(
-                  'https://restaurant-api.dicoding.dev/images/large/43',
+                child: Image.asset(
+                  'assets/images/restaurant.jpeg',
                   fit: BoxFit.cover,
                 ),
               ),

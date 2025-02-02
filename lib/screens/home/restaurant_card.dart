@@ -30,8 +30,8 @@ class RestaurantCard extends StatelessWidget {
               Stack(children: [
                 ConstrainedBox(
                   constraints: const BoxConstraints(
-                    maxHeight: 90,
-                    minHeight: 70,
+                    maxHeight: 100,
+                    minHeight: 90,
                     maxWidth: 140,
                     minWidth: 100,
                   ),
