@@ -1,4 +1,5 @@
 import 'package:find_resto/provider/restaurant_search_provider.dart';
+import 'package:find_resto/screens/error/error_screen.dart';
 import 'package:find_resto/screens/home/restaurant_card.dart';
 import 'package:find_resto/static/navigation_route.dart';
 import 'package:find_resto/static/restaurant_search_result_state.dart';
@@ -117,15 +118,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     RestaurantSearchLoadedState(data: var restaurantList) =>
                       restaurantList.isEmpty
-                          ? Center(
-                              child: Text(
-                                "Restaurant tidak ditemukan",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            )
+                          ? ErrorScreen(message: "Restaurant tidak ditemukan.")
                           : ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -148,12 +141,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                 );
                               }),
                     RestaurantSearchErrorState(error: var message) => Center(
-                        child: Text(message),
+                        child: ErrorScreen(message: message),
                       ),
-                    _ => const SizedBox(),
                   };
                 })
               ])),
     );
   }
 }
+

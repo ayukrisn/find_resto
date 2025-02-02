@@ -180,7 +180,6 @@ class _ReviewScreenState extends State<ReviewScreen> {
                               name: _nameController.text,
                               review: _reviewController.text,
                             );
-                
                             if (addReviewProvider.resultState
                                 is AddReviewDoneState) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -188,13 +187,14 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                     content:
                                         Text('Review berhasil ditambahkan!')),
                               );
-                            } else if (addReviewProvider.resultState
+                            }                        
+                            else if (addReviewProvider.resultState
                                 is AddReviewErrorState) {
                               final errorMessage = (addReviewProvider.resultState
                                       as AddReviewErrorState)
                                   .error;
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Error: $errorMessage')),
+                                SnackBar(content: Text('Review gagal ditambahkan. Error: $errorMessage')),
                               );
                             }
                           }

@@ -1,4 +1,5 @@
 import 'package:find_resto/provider/restaurant_list_provider.dart';
+import 'package:find_resto/screens/error/error_screen.dart';
 import 'package:find_resto/screens/home/restaurant_card.dart';
 import 'package:find_resto/static/navigation_route.dart';
 import 'package:find_resto/static/restaurant_list_result_state.dart';
@@ -65,8 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: IgnorePointer(
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText:
-                          "Cari restoran",
+                      hintText: "Cari restoran",
                       filled: true,
                       fillColor: Theme.of(context).colorScheme.surfaceContainer,
                       border: InputBorder.none,
@@ -83,30 +83,40 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Center(child: CircularProgressIndicator()),
                   ),
                 RestaurantListLoadedState(data: var restaurantList) =>
-                  ListView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.only(top: 12),
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: restaurantList.length,
-                      itemBuilder: (context, index) {
-                        final restaurant = restaurantList[index];
-
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 10), 
-                          child: RestaurantCard(
-                            restaurant: restaurant,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                NavigationRoute.detailRoute.name,
-                                arguments: restaurant.id,
-                              );
-                            },
+                  restaurantList.isEmpty
+                      ? Center(
+                          child: Text(
+                            "Belum ada restoran saat ini",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
-                        );
-                      }),
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.only(top: 12),
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: restaurantList.length,
+                          itemBuilder: (context, index) {
+                            final restaurant = restaurantList[index];
+
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: RestaurantCard(
+                                restaurant: restaurant,
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    NavigationRoute.detailRoute.name,
+                                    arguments: restaurant.id,
+                                  );
+                                },
+                              ),
+                            );
+                          }),
                 RestaurantListErrorState(error: var message) => Center(
-                    child: Text(message),
+                    child: ErrorScreen(message: message)
                   ),
                 _ => const SizedBox(),
               };
