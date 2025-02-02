@@ -5,6 +5,7 @@ import 'package:find_resto/data/model/add_review_response.dart';
 import 'package:find_resto/data/model/restaurant_detail_response.dart';
 import 'package:find_resto/data/model/restaurant_response.dart';
 import 'package:find_resto/data/api/api_service.dart';
+import 'package:find_resto/data/model/restaurant_search_response.dart';
 
 class RestaurantService {
   final APIService _apiService = APIService.instance;
@@ -19,7 +20,7 @@ class RestaurantService {
       if (response.statusCode == 200) {
         // Success: Process the response data
         developer.log('API call successful: ${response.data}',
-            name: 'restaurant_service');
+            name: 'restaurant_service_success');
         return RestaurantResponse.fromJson(response.data);
       } else {
         // Error: Handle the error response
@@ -28,7 +29,7 @@ class RestaurantService {
         throw Exception('Failed to load restaurant list');
       }
     } catch (e) {
-      developer.log('Network error occurred: $e', name: 'restaurant_service');
+      developer.log('Network error occurred: $e', name: 'restaurant_service_network');
       throw Exception('Network error: $e');
     }
   }
@@ -88,6 +89,30 @@ class RestaurantService {
     } catch (e) {
       developer.log('Network error occurred: $e',
           name: 'restaurant_review_service');
+      throw Exception('Network error: $e');
+    }
+  }
+
+    // Method to fetch a list of restaurants
+  Future<RestaurantSearchResponse> searchRestaurants(
+      {Map<String, dynamic>? params}) async {
+    try {
+      final response =
+          await _apiService.request('/search', DioMethod.get, param: params);
+
+      if (response.statusCode == 200) {
+        // Success: Process the response data
+        developer.log('API call successful: ${response.data}',
+            name: 'restaurant_service');
+        return RestaurantSearchResponse.fromJson(response.data);
+      } else {
+        // Error: Handle the error response
+        developer.log('API call failed: ${response.statusMessage}',
+            name: 'restaurant_service');
+        throw Exception('Failed to load restaurant list');
+      }
+    } catch (e) {
+      developer.log('Network error occurred: $e', name: 'restaurant_service');
       throw Exception('Network error: $e');
     }
   }

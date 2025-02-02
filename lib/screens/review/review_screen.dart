@@ -1,4 +1,4 @@
-import 'package:find_resto/provider/review/add_review_provider.dart';
+import 'package:find_resto/provider/add_review_provider.dart';
 import 'package:find_resto/static/add_review_result_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

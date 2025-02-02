@@ -1,5 +1,6 @@
 enum NavigationRoute {
  homeRoute("/"),
+ searchRoute("/search"),
  detailRoute("/detail"),
  addReviewRoute("/detail/review");
  

@@ -30,10 +30,10 @@ class RestaurantCard extends StatelessWidget {
               Stack(children: [
                 ConstrainedBox(
                   constraints: const BoxConstraints(
-                    maxHeight: 100,
-                    minHeight: 80,
-                    maxWidth: 160,
-                    minWidth: 120,
+                    maxHeight: 90,
+                    minHeight: 70,
+                    maxWidth: 140,
+                    minWidth: 100,
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15.0),
@@ -119,7 +119,7 @@ class RestaurantCard extends StatelessWidget {
                     ),
                     const SizedBox.square(dimension: 12),
                     Opacity(
-                      opacity: 0.3,
+                      opacity: 0.7,
                       child: Text(
                         restaurant.description,
                         style: Theme.of(context).textTheme.bodySmall,

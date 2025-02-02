@@ -25,7 +25,7 @@ class MaterialTheme {
       onError: Color(0xffffffff),
       errorContainer: Color(0xffffdad6),
       onErrorContainer: Color(0xff93000a),
-      surface: Color.fromARGB(255, 255, 251, 243),
+      surface: Color.fromARGB(255, 255, 252, 248),
       onSurface: Color(0xff1e1b13),
       onSurfaceVariant: Color(0xff4b4739),
       outline: Color(0xff7c7767),
@@ -48,11 +48,11 @@ class MaterialTheme {
       onTertiaryFixedVariant: Color(0xff2c4e38),
       surfaceDim: Color(0xffe0d9cc),
       surfaceBright: Color(0xfffff9ee),
-      surfaceContainerLowest: Color(0xffffffff),
-      surfaceContainerLow: Color(0xfffaf3e5),
-      surfaceContainer: Color(0xfff4eddf),
-      surfaceContainerHigh: Color(0xffeee8da),
-      surfaceContainerHighest: Color(0xffe8e2d4),
+      surfaceContainerLowest: Color.fromARGB(255, 247, 243, 235),
+      surfaceContainerLow: Color.fromARGB(255, 247, 243, 235),
+      surfaceContainer: Color.fromARGB(255, 247, 243, 235),
+      surfaceContainerHigh: Color.fromARGB(255, 247, 243, 235),
+      surfaceContainerHighest: Color.fromARGB(255, 247, 243, 235),
     );
   }
 
@@ -101,13 +101,13 @@ class MaterialTheme {
       onTertiaryFixed: Color(0xffffffff),
       tertiaryFixedDim: Color(0xff3a5c45),
       onTertiaryFixedVariant: Color(0xffffffff),
-      surfaceDim: Color(0xffccc6b9),
+      surfaceDim: Color.fromARGB(255, 254, 247, 234),
       surfaceBright: Color(0xfffff9ee),
       surfaceContainerLowest: Color(0xffffffff),
-      surfaceContainerLow: Color(0xfffaf3e5),
-      surfaceContainer: Color(0xffeee8da),
-      surfaceContainerHigh: Color(0xffe3dccf),
-      surfaceContainerHighest: Color(0xffd7d1c4),
+      surfaceContainerLow: Color.fromARGB(255, 254, 247, 234),
+      surfaceContainer: Color.fromARGB(255, 254, 247, 234),
+      surfaceContainerHigh: Color.fromARGB(255, 254, 247, 234),
+      surfaceContainerHighest: Color.fromARGB(255, 254, 247, 234),
     );
   }
 
