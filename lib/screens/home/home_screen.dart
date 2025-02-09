@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Material(
                 elevation: 4,
-                shadowColor: Colors.black.withValues(alpha:0.1),
+                shadowColor: Colors.black.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
                 clipBehavior: Clip.hardEdge,
                 child: IgnorePointer(
@@ -77,50 +77,51 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            Consumer<RestaurantListProvider>(builder: (context, value, child) {
-              return switch (value.resultState) {
-                RestaurantListLoadingState() => const Center(
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                RestaurantListLoadedState(data: var restaurantList) =>
-                  restaurantList.isEmpty
-                      ? Center(
-                          child: Text(
-                            "Belum ada restoran saat ini",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                        )
-                      : ListView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.only(top: 12),
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: restaurantList.length,
-                          itemBuilder: (context, index) {
-                            final restaurant = restaurantList[index];
+            Consumer<RestaurantListProvider>(
+              builder: (context, value, child) {
+                return switch (value.resultState) {
+                  RestaurantListLoadingState() => const Center(
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                  RestaurantListLoadedState(data: var restaurantList) =>
+                    restaurantList.isEmpty
+                        ? Center(
+                            child: Text(
+                              "Belum ada restoran saat ini",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.only(top: 12),
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: restaurantList.length,
+                            itemBuilder: (context, index) {
+                              final restaurant = restaurantList[index];
 
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: RestaurantCard(
-                                restaurant: restaurant,
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    NavigationRoute.detailRoute.name,
-                                    arguments: restaurant.id,
-                                  );
-                                },
-                              ),
-                            );
-                          }),
-                RestaurantListErrorState(error: var message) => Center(
-                    child: ErrorScreen(message: message)
-                  ),
-                _ => const SizedBox(),
-              };
-            }),
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: RestaurantCard(
+                                  restaurant: restaurant,
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      NavigationRoute.detailRoute.name,
+                                      arguments: restaurant.id,
+                                    );
+                                  },
+                                ),
+                              );
+                            }),
+                  RestaurantListErrorState(error: var message) =>
+                    Center(child: ErrorScreen(message: message)),
+                  _ => const SizedBox(),
+                };
+              },
+            ),
           ],
         ),
       ),

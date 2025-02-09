@@ -50,7 +50,7 @@ class MaterialTheme {
       surfaceBright: Color(0xfffff9ee),
       surfaceContainerLowest: Color.fromARGB(255, 247, 243, 235),
       surfaceContainerLow: Color.fromARGB(255, 247, 243, 235),
-      surfaceContainer: Color.fromARGB(255, 247, 243, 235),
+      surfaceContainer: Color.fromARGB(255, 248, 246, 241),
       surfaceContainerHigh: Color.fromARGB(255, 247, 243, 235),
       surfaceContainerHighest: Color.fromARGB(255, 247, 243, 235),
     );

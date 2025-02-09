@@ -5,7 +5,7 @@ enum DioMethod { get, post, put, delete }
 class APIService {
   // Singleton instance
   APIService._singleton();
-  static final APIService instance = APIService._singleton();
+  static final instance = APIService._singleton();
 
   // Base URL for the API
   String get baseUrl {

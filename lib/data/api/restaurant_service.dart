@@ -11,8 +11,9 @@ class RestaurantService {
   final APIService _apiService = APIService.instance;
 
   // Method to fetch a list of restaurants
-  Future<RestaurantResponse> getRestaurants(
-      {Map<String, dynamic>? params}) async {
+  Future<RestaurantResponse> getRestaurants({
+    Map<String, dynamic>? params,
+  }) async {
     try {
       final response =
           await _apiService.request('/list', DioMethod.get, param: params);
@@ -29,14 +30,17 @@ class RestaurantService {
         throw Exception('Failed to load restaurant list');
       }
     } catch (e) {
-      developer.log('Network error occurred: $e', name: 'restaurant_service_network');
+      developer.log('Network error occurred: $e',
+          name: 'restaurant_service_network');
       throw Exception('Network error: $e');
     }
   }
 
   // Method to fetch the restaurant detail
-  Future<RestaurantDetailResponse> getRestaurantDetail(
-      {Map<String, dynamic>? params, required String id}) async {
+  Future<RestaurantDetailResponse> getRestaurantDetail({
+    Map<String, dynamic>? params,
+    required String id,
+  }) async {
     try {
       final response = await _apiService.request('/detail/$id', DioMethod.get,
           param: params);
@@ -93,9 +97,10 @@ class RestaurantService {
     }
   }
 
-    // Method to fetch a list of restaurants
-  Future<RestaurantSearchResponse> searchRestaurants(
-      {Map<String, dynamic>? params}) async {
+  // Method to fetch a list of restaurants
+  Future<RestaurantSearchResponse> searchRestaurants({
+    Map<String, dynamic>? params,
+  }) async {
     try {
       final response =
           await _apiService.request('/search', DioMethod.get, param: params);

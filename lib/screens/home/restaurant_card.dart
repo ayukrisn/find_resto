@@ -5,20 +5,18 @@ class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
   final Function() onTap;
 
-  const RestaurantCard({
-    super.key,
-    required this.restaurant,
-    required this.onTap
-  });
+  const RestaurantCard(
+      {super.key, required this.restaurant, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Card(
+        color: Theme.of(context).colorScheme.surfaceContainer,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         elevation: 4,
-        shadowColor: Colors.black.withValues(alpha:0.2),
+        shadowColor: Colors.black.withValues(alpha: 0.2),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: 12,
@@ -27,34 +25,35 @@ class RestaurantCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Stack(children: [
-                ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxHeight: 100,
-                    minHeight: 90,
-                    maxWidth: 140,
-                    minWidth: 100,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15.0),
-                    child: AspectRatio(
-                      aspectRatio: 4 / 3,
-                      child: Hero(
-                        tag: restaurant.pictureId,
-                        child: Image.network(
-                          'https://restaurant-api.dicoding.dev/images/large/${restaurant.pictureId}',
-                          fit: BoxFit.cover,
+              Stack(
+                children: [
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxHeight: 100,
+                      minHeight: 90,
+                      maxWidth: 140,
+                      minWidth: 100,
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15.0),
+                      child: AspectRatio(
+                        aspectRatio: 4 / 3,
+                        child: Hero(
+                          tag: restaurant.pictureId,
+                          child: Image.network(
+                            'https://restaurant-api.dicoding.dev/images/large/${restaurant.pictureId}',
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Positioned(
+                  Positioned(
                     top: 4,
                     left: 4,
                     child: Card(
                       elevation: 4,
-                      shadowColor: Colors.black.withValues(alpha:0.5),
+                      shadowColor: Colors.black.withValues(alpha: 0.5),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 2, horizontal: 4),
@@ -78,8 +77,10 @@ class RestaurantCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ))
-              ]),
+                    ),
+                  )
+                ],
+              ),
               const SizedBox.square(dimension: 12),
               Expanded(
                 child: Column(
@@ -126,9 +127,8 @@ class RestaurantCard extends StatelessWidget {
                       child: Text(
                         restaurant.description,
                         style: Theme.of(context).textTheme.bodySmall,
-                        maxLines: 2, // Set the maximum number of lines
-                        overflow: TextOverflow
-                            .ellipsis, // Add ellipsis (...) if the text overflows
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],

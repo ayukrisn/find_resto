@@ -20,7 +20,11 @@ class AddReviewProvider extends ChangeNotifier {
       _resultState = AddReviewLoadingState();
       notifyListeners();
 
-      final result = await _restaurantService.addReview(restaurantId: restaurantId, name: name, review: review);
+      final result = await _restaurantService.addReview(
+        restaurantId: restaurantId,
+        name: name,
+        review: review,
+      );
 
       if (result.error) {
         _resultState = AddReviewErrorState(result.message);

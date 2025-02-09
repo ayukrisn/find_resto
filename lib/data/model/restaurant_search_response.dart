@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final restaurantSearchResponse = restaurantSearchResponseFromJson(jsonString);
-
 import 'package:find_resto/data/model/restaurant.dart';
 import 'dart:convert';
 

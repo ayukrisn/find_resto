@@ -140,27 +140,28 @@ class _ReviewScreenState extends State<ReviewScreen> {
                     height: 16,
                   ),
                   ValueListenableBuilder(
-                      valueListenable: _reviewController,
-                      builder: (context, v, _) {
-                        return TextFormField(
-                          autofocus: true,
-                          focusNode: review,
-                          controller: _reviewController,
-                          minLines: 1,
-                          maxLines: null,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Review',
-                            errorText: review.hasFocus ? errorReview : null,
-                          ),
-                          onChanged: (_) {
-                            isValid.value = isValided();
-                          },
-                          onFieldSubmitted: (_) {
-                            review.unfocus();
-                          },
-                        );
-                      }),
+                    valueListenable: _reviewController,
+                    builder: (context, v, _) {
+                      return TextFormField(
+                        autofocus: true,
+                        focusNode: review,
+                        controller: _reviewController,
+                        minLines: 1,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Review',
+                          errorText: review.hasFocus ? errorReview : null,
+                        ),
+                        onChanged: (_) {
+                          isValid.value = isValided();
+                        },
+                        onFieldSubmitted: (_) {
+                          review.unfocus();
+                        },
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -170,42 +171,44 @@ class _ReviewScreenState extends State<ReviewScreen> {
             SizedBox(
               width: double.infinity,
               child: ValueListenableBuilder(
-                valueListenable: isValid,
-                builder: (context, isEnabled, _) { 
-                  return ElevatedButton(
-                    onPressed: isValid.value
-                        ? () async {
-                            await addReviewProvider.addReview(
-                              restaurantId: widget.restaurant['id'],
-                              name: _nameController.text,
-                              review: _reviewController.text,
-                            );
-                            if (addReviewProvider.resultState
-                                is AddReviewDoneState) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content:
-                                        Text('Review berhasil ditambahkan!')),
-                              );
-                            }                        
-                            else if (addReviewProvider.resultState
-                                is AddReviewErrorState) {
-                              final errorMessage = (addReviewProvider.resultState
-                                      as AddReviewErrorState)
-                                  .error;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Review gagal ditambahkan. Error: $errorMessage')),
-                              );
-                            }
-                          }
-                        : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    child: Text("Kirim Review"));
-                }
-              ),
+                  valueListenable: isValid,
+                  builder: (context, isEnabled, _) {
+                    return ElevatedButton(
+                        onPressed: isValid.value
+                            ? () async {
+                                await addReviewProvider.addReview(
+                                  restaurantId: widget.restaurant['id'],
+                                  name: _nameController.text,
+                                  review: _reviewController.text,
+                                );
+                                if (addReviewProvider.resultState
+                                    is AddReviewDoneState) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Review berhasil ditambahkan!')),
+                                  );
+                                } else if (addReviewProvider.resultState
+                                    is AddReviewErrorState) {
+                                  final errorMessage = (addReviewProvider
+                                          .resultState as AddReviewErrorState)
+                                      .error;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Review gagal ditambahkan. Error: $errorMessage')),
+                                  );
+                                }
+                              }
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        child: Text("Kirim Review"));
+                  }),
             ),
             if (addReviewProvider.resultState is AddReviewLoadingState)
               CircularProgressIndicator(),
