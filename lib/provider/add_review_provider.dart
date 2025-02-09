@@ -1,6 +1,7 @@
+import 'package:flutter/widgets.dart';
+
 import 'package:find_resto/data/api/restaurant_service.dart';
 import 'package:find_resto/static/add_review_result_state.dart';
-import 'package:flutter/widgets.dart';
 
 class AddReviewProvider extends ChangeNotifier {
   final RestaurantService _restaurantService;

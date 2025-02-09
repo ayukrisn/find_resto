@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:find_resto/data/api/restaurant_service.dart';
 import 'package:find_resto/provider/restaurant_detail_provider.dart';
 import 'package:find_resto/provider/restaurant_list_provider.dart';
@@ -8,8 +11,6 @@ import 'package:find_resto/screens/home/home_screen.dart';
 import 'package:find_resto/screens/review/review_screen.dart';
 import 'package:find_resto/screens/search/search_screen.dart';
 import 'package:find_resto/static/navigation_route.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'theme/util.dart';
 import 'theme/theme.dart';
 

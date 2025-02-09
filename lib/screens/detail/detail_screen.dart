@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:readmore/readmore.dart';
+
 import 'package:find_resto/data/model/restaurant_detail_response.dart';
 import 'package:find_resto/screens/error/error_screen.dart';
 import 'package:find_resto/static/navigation_route.dart';
 import 'package:find_resto/static/restaurant_detail_result_state.dart';
 import 'package:find_resto/provider/restaurant_detail_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:readmore/readmore.dart';
 
 class DetailScreen extends StatefulWidget {
   final String restaurantId;

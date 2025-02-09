@@ -1,8 +1,11 @@
-import 'package:find_resto/data/api/restaurant_service.dart';
-import 'package:find_resto/static/restaurant_search_result_state.dart';
+import 'dart:developer' as developer;
+
 import 'package:flutter/widgets.dart';
 
-import 'dart:developer' as developer;
+import 'package:find_resto/data/api/restaurant_service.dart';
+import 'package:find_resto/static/restaurant_search_result_state.dart';
+
+
 
 class RestaurantSearchProvider extends ChangeNotifier {
   final RestaurantService _restaurantService;

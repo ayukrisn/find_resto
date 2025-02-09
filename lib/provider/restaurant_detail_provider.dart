@@ -1,7 +1,7 @@
-import 'package:find_resto/data/api/restaurant_service.dart';
-import 'package:find_resto/static/restaurant_detail_result_state.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:find_resto/data/api/restaurant_service.dart';
+import 'package:find_resto/static/restaurant_detail_result_state.dart';
 class RestaurantDetailProvider extends ChangeNotifier {
   final RestaurantService _restaurantService;
 

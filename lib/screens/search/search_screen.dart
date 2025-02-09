@@ -1,12 +1,13 @@
+import 'dart:developer' as developer;
+
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:find_resto/provider/restaurant_search_provider.dart';
 import 'package:find_resto/screens/error/error_screen.dart';
 import 'package:find_resto/screens/home/restaurant_card.dart';
 import 'package:find_resto/static/navigation_route.dart';
 import 'package:find_resto/static/restaurant_search_result_state.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import 'dart:developer' as developer;
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
