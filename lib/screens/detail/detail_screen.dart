@@ -24,11 +24,25 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      context.read<RestaurantDetailProvider>().getRestaurantDetail(
-            widget.restaurantId,
-          );
-    });
+    Future.microtask(
+      () {
+        context.read<RestaurantDetailProvider>().getRestaurantDetail(
+              widget.restaurantId,
+            );
+      },
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Future.microtask(
+      () {
+        context
+            .read<RestaurantDetailProvider>()
+            .getRestaurantDetail(widget.restaurantId);
+      },
+    );
   }
 
   @override
@@ -293,19 +307,14 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                         ),
                         TextButton(
                             onPressed: () async {
-                              final bool? shouldRefresh =
-                                  await Navigator.pushNamed(context,
-                                      NavigationRoute.addReviewRoute.name,
-                                      arguments: {
-                                    'id': restaurantDetail.id,
-                                    'name': restaurantDetail.name,
-                                  }) as bool?;
-
-                              if (shouldRefresh ?? false) {
-                                context
-                                    .read<RestaurantDetailProvider>()
-                                    .getRestaurantDetail(restaurantDetail.id);
-                              }
+                              Navigator.pushNamed(
+                                context,
+                                NavigationRoute.addReviewRoute.name,
+                                arguments: {
+                                  'id': restaurantDetail.id,
+                                  'name': restaurantDetail.name
+                                },
+                              );
                             },
                             child: Text("Tambahkan Review"))
                       ],

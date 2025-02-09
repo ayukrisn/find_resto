@@ -1,9 +1,10 @@
+import 'package:find_resto/screens/utils/alert_dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 import 'package:find_resto/provider/add_review_provider.dart';
 import 'package:find_resto/static/add_review_result_state.dart';
+import 'package:find_resto/static/navigation_route.dart';
 
 class ReviewScreen extends StatefulWidget {
   final Map restaurant;
@@ -185,10 +186,25 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                 );
                                 if (addReviewProvider.resultState
                                     is AddReviewDoneState) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Review berhasil ditambahkan!')),
+                                  alertDialogWidget(
+                                    context,
+                                    title: "Review sudah dikirim!",
+                                    content:
+                                        "Terima kasih atas reviewmu yang berharga",
+                                    onConfirm: () => {
+                                      // Navigator.pop(context),
+                                      Navigator.popUntil(
+                                        context,
+                                        ModalRoute.withName(
+                                          NavigationRoute.detailRoute.name,
+                                        ),
+                                      )
+                                      // Navigator.pushReplacementNamed(
+                                      //   context,
+                                      //   NavigationRoute.detailRoute.name,
+                                      //   arguments: widget.restaurant['id'],
+                                      // ),
+                                    },
                                   );
                                 } else if (addReviewProvider.resultState
                                     is AddReviewErrorState) {

@@ -15,30 +15,34 @@ import 'theme/util.dart';
 import 'theme/theme.dart';
 
 void main() {
-  runApp(MultiProvider(
-    providers: [
-      Provider(
-        create: (context) => RestaurantService(),
-      ),
-      ChangeNotifierProvider(
-        create: (context) =>
-            RestaurantListProvider(context.read<RestaurantService>()),
-      ),
-      ChangeNotifierProvider(
-        create: (context) =>
-            RestaurantDetailProvider(context.read<RestaurantService>()),
-      ),
-      ChangeNotifierProvider(
-        create: (context) =>
-            AddReviewProvider(context.read<RestaurantService>()),
-      ),
-      ChangeNotifierProvider(
-        create: (context) =>
-            RestaurantSearchProvider(context.read<RestaurantService>()),
-      ),
-    ],
-    child: const MyApp(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider(
+          create: (context) => RestaurantService(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              RestaurantListProvider(context.read<RestaurantService>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              RestaurantDetailProvider(context.read<RestaurantService>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AddReviewProvider(
+            context.read<RestaurantService>(),
+            context.read<RestaurantDetailProvider>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              RestaurantSearchProvider(context.read<RestaurantService>()),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -61,11 +65,12 @@ class MyApp extends StatelessWidget {
         NavigationRoute.homeRoute.name: (context) => const HomeScreen(),
         NavigationRoute.searchRoute.name: (context) => const SearchScreen(),
         NavigationRoute.detailRoute.name: (context) => DetailScreen(
-              restaurantId: ModalRoute.of(context)?.settings.arguments as String,
+              restaurantId:
+                  ModalRoute.of(context)?.settings.arguments as String,
             ),
-            NavigationRoute.addReviewRoute.name: (context) => ReviewScreen(
-              restaurant: ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>
-            )
+        NavigationRoute.addReviewRoute.name: (context) => ReviewScreen(
+            restaurant: ModalRoute.of(context)!.settings.arguments
+                as Map<String, dynamic>)
       },
     );
   }
