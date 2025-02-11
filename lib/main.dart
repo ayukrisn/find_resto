@@ -1,16 +1,23 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:find_resto/data/api/restaurant_service.dart';
-import 'package:find_resto/provider/restaurant_detail_provider.dart';
-import 'package:find_resto/provider/restaurant_list_provider.dart';
-import 'package:find_resto/provider/add_review_provider.dart';
-import 'package:find_resto/provider/restaurant_search_provider.dart';
-import 'package:find_resto/screens/detail/detail_screen.dart';
-import 'package:find_resto/screens/home/home_screen.dart';
-import 'package:find_resto/screens/review/review_screen.dart';
-import 'package:find_resto/screens/search/search_screen.dart';
+import 'package:find_resto/data/local/local_database_service.dart';
+import 'package:find_resto/data/model/restaurant.dart';
+import 'package:find_resto/provider/main/index_nav_provider.dart';
+import 'package:find_resto/provider/restaurant/restaurant_detail_provider.dart';
+import 'package:find_resto/provider/restaurant/restaurant_list_provider.dart';
+import 'package:find_resto/provider/restaurant/add_review_provider.dart';
+import 'package:find_resto/provider/restaurant/restaurant_search_provider.dart';
+import 'package:find_resto/provider/favourite/favourite_icon_provider.dart';
+import 'package:find_resto/provider/favourite/local_database_provider.dart';
+import 'package:find_resto/screens/restaurant/detail/detail_screen.dart';
+import 'package:find_resto/screens/restaurant/review/review_screen.dart';
+import 'package:find_resto/screens/restaurant/search/search_screen.dart';
+import 'package:find_resto/screens/main/main_screen.dart';
 import 'package:find_resto/static/navigation_route.dart';
+
 import 'theme/util.dart';
 import 'theme/theme.dart';
 
@@ -19,7 +26,21 @@ void main() {
     MultiProvider(
       providers: [
         Provider(
+          create: (context) => LocalDatabaseService(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => LocalDatabaseProvider(
+            context.read<LocalDatabaseService>(),
+          ),
+        ),
+        Provider(
           create: (context) => RestaurantService(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => FavouriteIconProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => IndexNavProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) =>
@@ -60,13 +81,13 @@ class MyApp extends StatelessWidget {
       darkTheme: theme.dark(),
       themeMode: ThemeMode.system,
       // home: SearchScreen(),
-      initialRoute: NavigationRoute.homeRoute.name,
+      initialRoute: NavigationRoute.mainRoute.name,
       routes: {
-        NavigationRoute.homeRoute.name: (context) => const HomeScreen(),
+        NavigationRoute.mainRoute.name: (context) => const MainScreen(),
         NavigationRoute.searchRoute.name: (context) => const SearchScreen(),
         NavigationRoute.detailRoute.name: (context) => DetailScreen(
-              restaurantId:
-                  ModalRoute.of(context)?.settings.arguments as String,
+              restaurant:
+                  ModalRoute.of(context)?.settings.arguments as Restaurant,
             ),
         NavigationRoute.addReviewRoute.name: (context) => ReviewScreen(
             restaurant: ModalRoute.of(context)!.settings.arguments

@@ -3,17 +3,19 @@ import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 
 import 'package:find_resto/data/model/restaurant_detail_response.dart';
-import 'package:find_resto/screens/error/error_screen.dart';
+import 'package:find_resto/screens/utils/error/error_screen.dart';
 import 'package:find_resto/static/navigation_route.dart';
 import 'package:find_resto/static/restaurant_detail_result_state.dart';
-import 'package:find_resto/provider/restaurant_detail_provider.dart';
+import 'package:find_resto/provider/restaurant/restaurant_detail_provider.dart';
+import 'package:find_resto/data/model/restaurant.dart';
+import 'package:find_resto/screens/restaurant/detail/favourite_icon_widget.dart';
 
 class DetailScreen extends StatefulWidget {
-  final String restaurantId;
+  final Restaurant restaurant;
 
   const DetailScreen({
     super.key,
-    required this.restaurantId,
+    required this.restaurant,
   });
 
   @override
@@ -27,7 +29,7 @@ class _DetailScreenState extends State<DetailScreen> {
     Future.microtask(
       () {
         context.read<RestaurantDetailProvider>().getRestaurantDetail(
-              widget.restaurantId,
+              widget.restaurant.id
             );
       },
     );
@@ -40,7 +42,7 @@ class _DetailScreenState extends State<DetailScreen> {
       () {
         context
             .read<RestaurantDetailProvider>()
-            .getRestaurantDetail(widget.restaurantId);
+            .getRestaurantDetail(widget.restaurant.id);
       },
     );
   }
@@ -65,6 +67,7 @@ class _DetailScreenState extends State<DetailScreen> {
             ) =>
               BodyOfDetailScreenWidget(
                 statusBarHeight: statusBarHeight,
+                restaurant: widget.restaurant,
                 restaurantDetail: restaurantDetail,
               ),
             RestaurantDetailErrorState(
@@ -83,11 +86,13 @@ class _DetailScreenState extends State<DetailScreen> {
 }
 
 class BodyOfDetailScreenWidget extends StatelessWidget {
+  final Restaurant restaurant;
   final RestaurantDetail restaurantDetail;
   final double statusBarHeight;
 
   const BodyOfDetailScreenWidget({
     super.key,
+    required this.restaurant,
     required this.restaurantDetail,
     required this.statusBarHeight,
   });
@@ -128,14 +133,20 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                   radius: 25,
                   backgroundColor: Theme.of(context).colorScheme.surface,
                   child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      )),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
                 ),
+              ),
+              Positioned(
+                top: 16 + statusBarHeight,
+                right: 16,
+                child: FavouriteIconWidget(restaurant: restaurant),
               ),
               Container(
                 margin: EdgeInsets.only(top: 280),

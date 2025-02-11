@@ -2,7 +2,7 @@ import 'package:find_resto/screens/utils/alert_dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:find_resto/provider/add_review_provider.dart';
+import 'package:find_resto/provider/restaurant/add_review_provider.dart';
 import 'package:find_resto/static/add_review_result_state.dart';
 import 'package:find_resto/static/navigation_route.dart';
 
