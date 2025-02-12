@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:find_resto/data/model/restaurant.dart';
+import 'package:find_resto/data/model/restaurant/restaurant.dart';
 
 SearchResponse searchResponseFromJson(String str) => SearchResponse.fromJson(json.decode(str));
 

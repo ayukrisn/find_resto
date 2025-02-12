@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:find_resto/provider/favourite/local_database_provider.dart';
 import 'package:find_resto/screens/home/restaurant_card.dart';
-import 'package:find_resto/static/navigation_route.dart';
+import 'package:find_resto/static/restaurant/navigation_route.dart';
 
 // import 'package:provider/provider.dart';
 
@@ -17,10 +17,10 @@ class FavouriteScreen extends StatefulWidget {
 class _FavouriteScreenState extends State<FavouriteScreen> {
   @override
   void initState() {
+    super.initState();
     Future.microtask(() {
       context.read<LocalDatabaseProvider>().loadAllRestaurantFav();
     });
-    super.initState();
   }
 
   @override

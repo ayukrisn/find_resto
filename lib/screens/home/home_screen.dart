@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:find_resto/provider/restaurant/restaurant_list_provider.dart';
 import 'package:find_resto/screens/utils/error/error_screen.dart';
 import 'package:find_resto/screens/home/restaurant_card.dart';
-import 'package:find_resto/static/navigation_route.dart';
-import 'package:find_resto/static/restaurant_list_result_state.dart';
+import 'package:find_resto/static/restaurant/navigation_route.dart';
+import 'package:find_resto/static/restaurant/restaurant_list_result_state.dart';
 
 
 class HomeScreen extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:find_resto/data/model/restaurant.dart';
+import 'package:find_resto/data/model/restaurant/restaurant.dart';
 import 'package:flutter/material.dart';
 
 import 'package:find_resto/data/local/local_database_service.dart';

@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
-import 'package:find_resto/data/model/restaurant.dart';
+import 'package:find_resto/data/model/restaurant/restaurant.dart';
 
 class LocalDatabaseService {
   static const String _databaseName = 'find-resto.db';

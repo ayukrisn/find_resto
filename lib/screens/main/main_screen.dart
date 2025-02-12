@@ -40,8 +40,8 @@ class MainScreen extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: "Settings",
-            tooltip: "Settings",
+            label: "Pengaturan",
+            tooltip: "Pengaturan",
           ),
         ],
       ),

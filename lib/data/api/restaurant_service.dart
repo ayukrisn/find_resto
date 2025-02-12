@@ -1,11 +1,11 @@
 import 'dart:developer' as developer;
 import 'dart:convert';
 
-import 'package:find_resto/data/model/add_review_response.dart';
-import 'package:find_resto/data/model/restaurant_detail_response.dart';
-import 'package:find_resto/data/model/restaurant_response.dart';
+import 'package:find_resto/data/model/restaurant/add_review_response.dart';
+import 'package:find_resto/data/model/restaurant/restaurant_detail_response.dart';
+import 'package:find_resto/data/model/restaurant/restaurant_response.dart';
 import 'package:find_resto/data/api/api_service.dart';
-import 'package:find_resto/data/model/restaurant_search_response.dart';
+import 'package:find_resto/data/model/restaurant/restaurant_search_response.dart';
 
 class RestaurantService {
   final APIService _apiService = APIService.instance;

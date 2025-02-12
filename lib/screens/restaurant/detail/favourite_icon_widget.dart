@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:find_resto/provider/favourite/favourite_icon_provider.dart';
 import 'package:find_resto/provider/favourite/local_database_provider.dart';
-import 'package:find_resto/data/model/restaurant.dart';
+import 'package:find_resto/data/model/restaurant/restaurant.dart';
 
 
 

@@ -3,7 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/widgets.dart';
 
 import 'package:find_resto/data/api/restaurant_service.dart';
-import 'package:find_resto/static/restaurant_search_result_state.dart';
+import 'package:find_resto/static/restaurant/restaurant_search_result_state.dart';
 
 
 

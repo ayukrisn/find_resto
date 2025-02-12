@@ -1,4 +1,4 @@
-import 'package:find_resto/data/model/restaurant_detail_response.dart';
+import 'package:find_resto/data/model/restaurant/restaurant_detail_response.dart';
 
 sealed class RestaurantDetailResultState {}
 

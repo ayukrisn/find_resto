@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 
-import 'package:find_resto/data/model/restaurant_detail_response.dart';
+import 'package:find_resto/data/model/restaurant/restaurant_detail_response.dart';
 import 'package:find_resto/screens/utils/error/error_screen.dart';
-import 'package:find_resto/static/navigation_route.dart';
-import 'package:find_resto/static/restaurant_detail_result_state.dart';
+import 'package:find_resto/static/restaurant/navigation_route.dart';
+import 'package:find_resto/static/restaurant/restaurant_detail_result_state.dart';
 import 'package:find_resto/provider/restaurant/restaurant_detail_provider.dart';
-import 'package:find_resto/data/model/restaurant.dart';
+import 'package:find_resto/data/model/restaurant/restaurant.dart';
 import 'package:find_resto/screens/restaurant/detail/favourite_icon_widget.dart';
 
 class DetailScreen extends StatefulWidget {

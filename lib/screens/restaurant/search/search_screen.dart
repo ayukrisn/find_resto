@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:find_resto/provider/restaurant/restaurant_search_provider.dart';
 import 'package:find_resto/screens/utils/error/error_screen.dart';
 import 'package:find_resto/screens/home/restaurant_card.dart';
-import 'package:find_resto/static/navigation_route.dart';
-import 'package:find_resto/static/restaurant_search_result_state.dart';
+import 'package:find_resto/static/restaurant/navigation_route.dart';
+import 'package:find_resto/static/restaurant/restaurant_search_result_state.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
