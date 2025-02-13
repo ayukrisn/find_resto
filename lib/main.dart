@@ -1,8 +1,10 @@
 import 'package:find_resto/provider/settings/dark_theme_provider.dart';
 import 'package:find_resto/provider/settings/notification_provider.dart';
 import 'package:find_resto/provider/settings/setting_provider.dart';
+import 'package:find_resto/services/local_notification_service.dart';
 import 'package:find_resto/services/shared_preferences_service.dart';
 import 'package:find_resto/static/settings/dark_theme_state.dart';
+import 'package:find_resto/static/settings/notification_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,13 +42,18 @@ void main() async {
         Provider(
           create: (context) => SharedPreferencesService(prefs),
         ),
+        Provider(
+          create: (context) => RestaurantService(),
+        ),
+        Provider(
+          create: (context) => LocalNotificationService()
+            ..initNotification()
+            ..configureLocalTimeZone(),
+        ),
         ChangeNotifierProvider(
           create: (context) => LocalDatabaseProvider(
             context.read<LocalDatabaseService>(),
           ),
-        ),
-        Provider(
-          create: (context) => RestaurantService(),
         ),
         ChangeNotifierProvider(
           create: (context) => FavouriteIconProvider(),
@@ -84,7 +91,8 @@ void main() async {
           create: (context) => DarkThemeProvider(),
         ),
         ChangeNotifierProvider(
-          create: (context) => NotificationProvider(),
+          create: (context) =>
+              NotificationProvider(context.read<LocalNotificationService>()),
         ),
       ],
       child: const MyApp(),
@@ -102,17 +110,21 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   DarkThemeProvider darkThemeProvider = DarkThemeProvider();
 
-  void getCurrentTheme() {
+  void getCurrentSettings() {
     final darkThemeProvider = context.read<DarkThemeProvider>();
+    final notificationProvider = context.read<NotificationProvider>();
     final settingProvider = context.read<SettingProvider>();
 
     settingProvider.getSettingValue();
     final setting = settingProvider.setting;
     if (setting != null) {
       developer.log('setting.darkTheme: ${setting.darkTheme}',
-            name: 'theme_settings');
+          name: 'theme_settings');
       darkThemeProvider.darkThemeState =
           setting.darkTheme ? DarkThemeState.enable : DarkThemeState.disable;
+      notificationProvider.notificationState = setting.notificationEnable
+          ? NotificationState.enable
+          : NotificationState.disable;
     }
   }
 
@@ -120,7 +132,9 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     Future.microtask(() async {
-      getCurrentTheme();
+      final notificationProvider = context.read<NotificationProvider>();
+      await notificationProvider.requestPermissions();
+      getCurrentSettings();
     });
   }
 

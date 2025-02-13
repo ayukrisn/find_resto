@@ -95,13 +95,18 @@ class _SettingScreenState extends State<SettingScreen> {
             builder: (_, provider, __) {
               return SwitchListTile(
                 title: const Text("Notifikasi"),
-                secondary: Icon(provider.notificationState == NotificationState.enable
-                    ? Icons.notifications_active
-                    : Icons.notifications_off),
+                secondary: Icon(
+                    provider.notificationState == NotificationState.enable
+                        ? Icons.notifications_active
+                        : Icons.notifications_off),
                 value: provider.notificationState == NotificationState.enable,
-                onChanged: (value) {
-                  provider.notificationState =
-                      value ? NotificationState.enable : NotificationState.disable;
+                onChanged: (value) async {
+                  if (value) {
+                    await provider.requestPermissions();
+                  }
+                  provider.notificationState = value
+                      ? NotificationState.enable
+                      : NotificationState.disable;
                   saveAction();
                 },
               );
