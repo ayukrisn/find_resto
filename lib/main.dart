@@ -1,4 +1,5 @@
 import 'package:find_resto/provider/settings/dark_theme_provider.dart';
+import 'package:find_resto/provider/settings/notification_provider.dart';
 import 'package:find_resto/provider/settings/setting_provider.dart';
 import 'package:find_resto/services/shared_preferences_service.dart';
 import 'package:find_resto/static/settings/dark_theme_state.dart';
@@ -81,6 +82,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => DarkThemeProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => NotificationProvider(),
         ),
       ],
       child: const MyApp(),

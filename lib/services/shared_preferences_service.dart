@@ -6,17 +6,23 @@ class SharedPreferencesService {
 
   SharedPreferencesService(this._preferences);
 
-  static const String themeStatus = "THEME_STATUS";
+  static const String keyThemeStatus = "THEME_STATUS";
+  static const String keyNotificationStatus = "NOTIFICATION_STATUS";
 
   Future<void> saveSettingValue(Setting setting) async {
     try {
-      await _preferences.setBool(themeStatus, setting.darkTheme);
+      await _preferences.setBool(keyThemeStatus, setting.darkTheme);
+      await _preferences.setBool(
+          keyNotificationStatus, setting.notificationEnable);
     } catch (e) {
       throw Exception("Shared preferences cannot save the setting value.");
     }
   }
 
   Setting getSettingValue() {
-    return Setting(darkTheme: _preferences.getBool(themeStatus) ?? false);
+    return Setting(
+      darkTheme: _preferences.getBool(keyThemeStatus) ?? false,
+      notificationEnable: _preferences.getBool(keyNotificationStatus) ?? true,
+    );
   }
 }
