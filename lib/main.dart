@@ -1,8 +1,10 @@
+import 'package:find_resto/data/model/settings/setting.dart';
 import 'package:find_resto/provider/settings/dark_theme_provider.dart';
 import 'package:find_resto/provider/settings/notification_provider.dart';
 import 'package:find_resto/provider/settings/setting_provider.dart';
 import 'package:find_resto/services/local_notification_service.dart';
 import 'package:find_resto/services/shared_preferences_service.dart';
+import 'package:find_resto/services/workmanager_service.dart';
 import 'package:find_resto/static/settings/dark_theme_state.dart';
 import 'package:find_resto/static/settings/notification_state.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +51,9 @@ void main() async {
           create: (context) => LocalNotificationService()
             ..initNotification()
             ..configureLocalTimeZone(),
+        ),
+        Provider(
+          create: (context) => WorkmanagerService()..init(),
         ),
         ChangeNotifierProvider(
           create: (context) => LocalDatabaseProvider(
@@ -110,30 +115,50 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   DarkThemeProvider darkThemeProvider = DarkThemeProvider();
 
-  void getCurrentSettings() {
+  Future<void> getCurrentSettings() async {
     final darkThemeProvider = context.read<DarkThemeProvider>();
     final notificationProvider = context.read<NotificationProvider>();
     final settingProvider = context.read<SettingProvider>();
+    final workmanagerService = context.read<WorkmanagerService>();
 
+    // Check permission for the notification
+    bool notificationGranted =
+        await notificationProvider.requestPermissions() ?? false;
+    developer.log('Notification granted: $notificationGranted',
+        name: 'notification granted main');
+
+    // Retrieve settings
     settingProvider.getSettingValue();
-    final setting = settingProvider.setting;
-    if (setting != null) {
-      developer.log('setting.darkTheme: ${setting.darkTheme}',
-          name: 'theme_settings');
-      darkThemeProvider.darkThemeState =
-          setting.darkTheme ? DarkThemeState.enable : DarkThemeState.disable;
-      notificationProvider.notificationState = setting.notificationEnable
-          ? NotificationState.enable
-          : NotificationState.disable;
+    Setting setting = settingProvider.setting!;
+    developer.log(
+      'setting retrieved: ${setting.darkTheme} ${setting.notificationEnable}',
+      name: 'settings main',
+    );
+
+    // Set the theme
+    developer.log('setting.darkTheme: ${setting.darkTheme}',
+        name: 'theme_settings main');
+    darkThemeProvider.darkThemeState =
+        setting.darkTheme ? DarkThemeState.enable : DarkThemeState.disable;
+    //Set the notification
+    developer.log('setting.notification: ${setting.notificationEnable}',
+        name: 'notification_settings main');
+    notificationProvider.notificationState =
+        (notificationGranted && setting.notificationEnable)
+            ? NotificationState.enable
+            : NotificationState.disable;
+    //Set the workmanager
+    if (notificationProvider.notificationState == NotificationState.enable) {
+      workmanagerService.runPeriodicTask();
+    } else {
+      workmanagerService.cancelAllTask();
     }
   }
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(() async {
-      final notificationProvider = context.read<NotificationProvider>();
-      await notificationProvider.requestPermissions();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       getCurrentSettings();
     });
   }
@@ -151,9 +176,6 @@ class _MyAppState extends State<MyApp> {
           theme: darkThemeProvider.darkThemeState == DarkThemeState.enable
               ? theme.dark()
               : theme.light(),
-          // darkTheme: theme.dark(),
-          // themeMode: ThemeMode.system,
-          // home: SearchScreen(),
           initialRoute: NavigationRoute.mainRoute.name,
           routes: {
             NavigationRoute.mainRoute.name: (context) => const MainScreen(),

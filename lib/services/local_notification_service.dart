@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -95,12 +94,16 @@ class LocalNotificationService {
   }
 
   //Notification detail setup
-  NotificationDetails notificationDetails() {
+  NotificationDetails notificationDetails(
+    String channelId,
+    String channelName,
+    String channelDescription,
+  ) {
     return NotificationDetails(
       android: AndroidNotificationDetails(
-        "meal_reminder_id",
-        "Daily Meal Reminder",
-        channelDescription: "Daily Meal Reminder Channel",
+        channelId,
+        channelName,
+        channelDescription: channelDescription,
         importance: Importance.max,
         priority: Priority.high,
       ),
@@ -127,6 +130,33 @@ class LocalNotificationService {
     return scheduledDate;
   }
 
+  // Show simple notification
+  Future<void> showNotification({
+    required int id,
+    required String title,
+    required String body,
+    required String payload,
+  }) async {
+    if (!_isInitialized) {
+      developer.log('Notifications not initialized',
+          name: 'notification_service');
+      return;
+    }
+
+     //Schedule the notification
+    await notificationsPlugin.show(
+      id,
+      title,
+      body,
+      notificationDetails(
+        "restaurant_recommendation_id",
+        "Daily Restaurant Recommendation",
+        "Daily Restaurant Recommendation Channel",
+      ),
+    );
+
+  }
+
   //Show Notification based on schedule
   Future<void> scheduleNotification({
     int id = 1,
@@ -151,7 +181,11 @@ class LocalNotificationService {
       title,
       body,
       scheduledDate,
-      notificationDetails(),
+      notificationDetails(
+        "meal_reminder_id",
+        "Daily Meal Reminder",
+        "Daily Meal Reminder Channel",
+      ),
 
       //iOS Specific
       uiLocalNotificationDateInterpretation:

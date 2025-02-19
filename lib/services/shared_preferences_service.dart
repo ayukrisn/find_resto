@@ -22,7 +22,7 @@ class SharedPreferencesService {
   Setting getSettingValue() {
     return Setting(
       darkTheme: _preferences.getBool(keyThemeStatus) ?? false,
-      notificationEnable: _preferences.getBool(keyNotificationStatus) ?? true,
+      notificationEnable: _preferences.getBool(keyNotificationStatus) ?? false,
     );
   }
 }

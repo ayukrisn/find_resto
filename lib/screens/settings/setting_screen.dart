@@ -55,10 +55,13 @@ class _SettingScreenState extends State<SettingScreen> {
 
         if (setting != null) {
           developer.log('setting.darkTheme: ${setting.darkTheme}',
-              name: 'theme_settings');
+              name: 'theme_settings screen');
           darkThemeProvider.darkThemeState = setting.darkTheme
               ? DarkThemeState.enable
               : DarkThemeState.disable;
+          developer.log(
+              'setting.notificationEnable: ${setting.notificationEnable}',
+              name: 'notification_settings screen');
           notificationProvider.notificationState = setting.notificationEnable
               ? NotificationState.enable
               : NotificationState.disable;
@@ -94,20 +97,34 @@ class _SettingScreenState extends State<SettingScreen> {
           Consumer<NotificationProvider>(
             builder: (_, provider, __) {
               return SwitchListTile(
-                title: const Text("Notifikasi"),
+                title: const Text("Notifikasi Daily Reminder"),
                 secondary: Icon(
                     provider.notificationState == NotificationState.enable
                         ? Icons.notifications_active
                         : Icons.notifications_off),
                 value: provider.notificationState == NotificationState.enable,
                 onChanged: (value) async {
+                  developer.log(
+                    'Value: $value',
+                    name: 'notification switch tile value',
+                  );
                   if (value) {
-                    await provider.requestPermissions();
+                    bool granted = await provider.requestPermissions() ?? false;
+                    if (!granted) {
+                      developer.log('Notification permission denied',
+                          name: 'notification setting screen');
+                      provider.notificationState = NotificationState.disable;
+                      return;
+                    }
                   }
                   provider.notificationState = value
                       ? NotificationState.enable
                       : NotificationState.disable;
                   saveAction();
+                  developer.log(
+                    'Value now: $value',
+                    name: 'notification switch tile value',
+                  );
                 },
               );
             },

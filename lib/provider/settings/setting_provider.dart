@@ -23,7 +23,7 @@ class SettingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getSettingValue() async {
+  void getSettingValue() {
     try {
       _setting = _service.getSettingValue();
       _message = "Data pengaturan telah dimuat.";

@@ -9,12 +9,8 @@ class NotificationProvider extends ChangeNotifier {
   final LocalNotificationService notificationService;
 
   NotificationProvider(this.notificationService);
-
-  int _notificationId = 0;
-  bool? _permission = false;
-
   //Notification state
-  NotificationState _notificationState = NotificationState.enable;
+  NotificationState _notificationState = NotificationState.disable;
 
   NotificationState get notificationState => _notificationState;
 
@@ -32,21 +28,26 @@ class NotificationProvider extends ChangeNotifier {
   //Pending notification request
   List<PendingNotificationRequest> pendingNotificationRequests = [];
 
-  Future<void> requestPermissions() async {
-    _permission = await notificationService.requestPermissions();
+  Future<bool?> requestPermissions() async {
+    bool? granted = await notificationService.requestPermissions();
+    if (granted ?? false) {
+      notificationState = NotificationState.disable;
+    }
     notifyListeners();
+    return granted;
   }
 
   // Create a schedule notification
   void _scheduleDailyMealNotification() {
     if (_notificationState == NotificationState.disable) {
-    developer.log("Notifications are disabled", name: "notification_provider");
-    return;
-  }
+      _cancelAllNotification();
+      developer.log("Notifications are disabled",
+          name: "notification_provider");
+      return;
+    }
 
-    _notificationId += 1;
     notificationService.scheduleNotification(
-      id: _notificationId,
+      id: UniqueKey().hashCode,
       title: "Daily Meal Reminder",
       body: "Jangan lupa makan siang, ya!",
       hour: 11,
