@@ -87,6 +87,6 @@ void showRestaurantNotification(Restaurant restaurant, LocalNotificationService 
       id: UniqueKey().hashCode,
       title: "Daily Restaurant Recommendation",
       body: "Yuk cek ${restaurant.name} di sini!",
-      payload: "Todo");
+      payload: restaurant.toJsonStr());
 }
 

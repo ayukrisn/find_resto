@@ -1,4 +1,5 @@
 import 'package:find_resto/services/local_notification_service.dart';
+import 'package:find_resto/services/workmanager_service.dart';
 import 'package:find_resto/static/settings/notification_state.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -7,8 +8,13 @@ import 'dart:developer' as developer;
 class NotificationProvider extends ChangeNotifier {
   //Notification service
   final LocalNotificationService notificationService;
+  //Work manager service
+  final WorkmanagerService workmanagerService;
 
-  NotificationProvider(this.notificationService);
+  NotificationProvider({
+    required this.notificationService,
+    required this.workmanagerService,
+  });
   //Notification state
   NotificationState _notificationState = NotificationState.disable;
 
@@ -20,8 +26,10 @@ class NotificationProvider extends ChangeNotifier {
 
     if (value == NotificationState.enable) {
       _scheduleDailyMealNotification();
+      workmanagerService.runPeriodicTask();
     } else {
       _cancelAllNotification();
+      workmanagerService.cancelAllTask();
     }
   }
 

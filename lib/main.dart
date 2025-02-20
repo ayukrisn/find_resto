@@ -1,6 +1,7 @@
 import 'package:find_resto/data/model/settings/setting.dart';
 import 'package:find_resto/provider/settings/dark_theme_provider.dart';
 import 'package:find_resto/provider/settings/notification_provider.dart';
+import 'package:find_resto/provider/settings/payload_provider.dart';
 import 'package:find_resto/provider/settings/setting_provider.dart';
 import 'package:find_resto/services/local_notification_service.dart';
 import 'package:find_resto/services/shared_preferences_service.dart';
@@ -35,9 +36,25 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
 
+  final notificationAppLaunchDetails =
+      await notificationsPlugin.getNotificationAppLaunchDetails();
+
+  String? payload;
+
+  if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+    developer.log('It is true',
+        name: 'notificationAppLaunchDetails');
+    final notificationResponse =
+        notificationAppLaunchDetails!.notificationResponse;
+    payload = notificationResponse?.payload;
+  }
+
   runApp(
     MultiProvider(
       providers: [
+        Provider(
+          create: (context) => WorkmanagerService()..init(),
+        ),
         Provider(
           create: (context) => LocalDatabaseService(),
         ),
@@ -52,9 +69,11 @@ void main() async {
             ..initNotification()
             ..configureLocalTimeZone(),
         ),
-        Provider(
-          create: (context) => WorkmanagerService()..init(),
-        ),
+        ChangeNotifierProvider(
+         create: (context) => PayloadProvider(
+           payload: payload,
+         ),
+       ),
         ChangeNotifierProvider(
           create: (context) => LocalDatabaseProvider(
             context.read<LocalDatabaseService>(),
@@ -96,17 +115,26 @@ void main() async {
           create: (context) => DarkThemeProvider(),
         ),
         ChangeNotifierProvider(
-          create: (context) =>
-              NotificationProvider(context.read<LocalNotificationService>()),
+          create: (context) => NotificationProvider(
+            notificationService: context.read<LocalNotificationService>(),
+            workmanagerService: context.read<WorkmanagerService>(),
+          ),
         ),
       ],
-      child: const MyApp(),
+      child: MyApp(
+        payload: payload,
+      ),
     ),
   );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final String? payload;
+
+  const MyApp({
+    super.key,
+    this.payload,
+  });
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -114,12 +142,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   DarkThemeProvider darkThemeProvider = DarkThemeProvider();
+  late String initialRoute;
 
   Future<void> getCurrentSettings() async {
     final darkThemeProvider = context.read<DarkThemeProvider>();
     final notificationProvider = context.read<NotificationProvider>();
     final settingProvider = context.read<SettingProvider>();
-    final workmanagerService = context.read<WorkmanagerService>();
 
     // Check permission for the notification
     bool notificationGranted =
@@ -147,12 +175,6 @@ class _MyAppState extends State<MyApp> {
         (notificationGranted && setting.notificationEnable)
             ? NotificationState.enable
             : NotificationState.disable;
-    //Set the workmanager
-    if (notificationProvider.notificationState == NotificationState.enable) {
-      workmanagerService.runPeriodicTask();
-    } else {
-      workmanagerService.cancelAllTask();
-    }
   }
 
   @override
@@ -161,6 +183,9 @@ class _MyAppState extends State<MyApp> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getCurrentSettings();
     });
+    initialRoute = widget.payload == null
+        ? NavigationRoute.mainRoute.name
+        : NavigationRoute.detailRoute.name;
   }
 
   // This widget is the root of your application.
@@ -176,7 +201,18 @@ class _MyAppState extends State<MyApp> {
           theme: darkThemeProvider.darkThemeState == DarkThemeState.enable
               ? theme.dark()
               : theme.light(),
-          initialRoute: NavigationRoute.mainRoute.name,
+          initialRoute: initialRoute,
+          onGenerateRoute: (settings) {
+            if (settings.name == NavigationRoute.detailRoute.name) {
+              Restaurant restaurant = Restaurant.fromJsonStr(widget.payload!);
+              return MaterialPageRoute(
+                builder: (context) => DetailScreen(
+                  restaurant: restaurant,
+                ),
+              );
+            }
+            return null;
+          },
           routes: {
             NavigationRoute.mainRoute.name: (context) => const MainScreen(),
             NavigationRoute.searchRoute.name: (context) => const SearchScreen(),

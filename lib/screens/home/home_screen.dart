@@ -1,3 +1,6 @@
+import 'package:find_resto/data/model/restaurant/restaurant.dart';
+import 'package:find_resto/provider/settings/payload_provider.dart';
+import 'package:find_resto/services/local_notification_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +10,6 @@ import 'package:find_resto/screens/home/restaurant_card.dart';
 import 'package:find_resto/static/restaurant/navigation_route.dart';
 import 'package:find_resto/static/restaurant/restaurant_list_result_state.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -16,12 +18,30 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  void _configureSelectNotificationSubject() {
+    selectNotificationStream.stream.listen((String? payload) {
+      context.read<PayloadProvider>().payload = payload;
+      if (payload != null) {
+        Restaurant restaurant = Restaurant.fromJsonStr(payload);
+        Navigator.pushNamed(context, NavigationRoute.detailRoute.name,
+            arguments: restaurant);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _configureSelectNotificationSubject();
     Future.microtask(() {
       context.read<RestaurantListProvider>().getRestaurants();
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    selectNotificationStream.close();
   }
 
   // This widget is the root of your application.

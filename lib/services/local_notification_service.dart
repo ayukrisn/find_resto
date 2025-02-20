@@ -1,3 +1,6 @@
+import 'dart:async';
+
+// import 'package:find_resto/data/model/settings/received_notification.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -5,9 +8,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 
-class LocalNotificationService {
-  final notificationsPlugin = FlutterLocalNotificationsPlugin();
+final notificationsPlugin = FlutterLocalNotificationsPlugin();
 
+final StreamController<String?> selectNotificationStream =
+    StreamController<String?>.broadcast();
+
+class LocalNotificationService {
   bool _isInitialized = false;
 
   bool get isInitialized => _isInitialized;
@@ -42,7 +48,16 @@ class LocalNotificationService {
     );
 
     //initialize the plugin
-    await notificationsPlugin.initialize(initSettings);
+    await notificationsPlugin.initialize(
+      initSettings,
+      // Handle the retrieved notification in foreground
+      onDidReceiveNotificationResponse: (notificationResponse) {
+        final payload = notificationResponse.payload;
+        if (payload != null && payload.isNotEmpty) {
+          selectNotificationStream.add(payload);
+        }
+      },
+    );
     _isInitialized = true;
   }
 
@@ -143,7 +158,7 @@ class LocalNotificationService {
       return;
     }
 
-     //Schedule the notification
+    //Schedule the notification
     await notificationsPlugin.show(
       id,
       title,
@@ -154,7 +169,6 @@ class LocalNotificationService {
         "Daily Restaurant Recommendation Channel",
       ),
     );
-
   }
 
   //Show Notification based on schedule
