@@ -36,14 +36,14 @@ class NotificationProvider extends ChangeNotifier {
   //Pending notification request
   List<PendingNotificationRequest> pendingNotificationRequests = [];
 
-  Future<bool?> requestPermissions() async {
-    bool? granted = await notificationService.requestPermissions();
-    if (granted ?? false) {
-      notificationState = NotificationState.disable;
-    }
-    notifyListeners();
-    return granted;
-  }
+  // Future<bool?> requestPermissions() async {
+  //   bool? granted = await notificationService.
+  //   if (granted ?? false) {
+  //     notificationState = NotificationState.disable;
+  //   }
+  //   notifyListeners();
+  //   return granted;
+  // }
 
   // Create a schedule notification
   void _scheduleDailyMealNotification() {

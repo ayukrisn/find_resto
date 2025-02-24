@@ -2,9 +2,11 @@ import 'package:find_resto/data/model/settings/setting.dart';
 import 'package:find_resto/provider/settings/dark_theme_provider.dart';
 import 'package:find_resto/provider/settings/notification_provider.dart';
 import 'package:find_resto/provider/settings/setting_provider.dart';
+import 'package:find_resto/services/permission_service.dart';
 import 'package:find_resto/static/settings/dark_theme_state.dart';
 import 'package:find_resto/static/settings/notification_state.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer' as developer;
 // import 'package:provider/provider.dart';
@@ -17,6 +19,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  final permissionService = PermissionService();
   void saveAction() async {
     final darkThemeState = context.read<DarkThemeProvider>().darkThemeState;
     final isDarkThemeEnable = darkThemeState.isEnable;
@@ -109,12 +112,39 @@ class _SettingScreenState extends State<SettingScreen> {
                     name: 'notification switch tile value',
                   );
                   if (value) {
-                    bool granted = await provider.requestPermissions() ?? false;
-                    if (!granted) {
+                    if (await permissionService.checkPermanentlyDenied()) {
                       developer.log('Notification permission denied',
                           name: 'notification setting screen');
-                      provider.notificationState = NotificationState.disable;
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text("Aplikasi membutuhkan izin"),
+                          content: Text(
+                              "Agar aplikasi dapat mengirimkan notifikasi, berikan izin terlebih dahulu di pengaturanmu."),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text('OK'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                openAppSettings();
+                                Navigator.pop(context);
+                              },
+                              child: Text('Buka Pengaturan'),
+                            ),
+                          ],
+                        ),
+                      );
                       return;
+                    } else {
+                      var permissionStatus = await permissionService
+                          .requestNotificationsPermission();
+                      if (!permissionStatus) {
+                        developer.log('Notification permission not granted',
+                            name: 'notification setting screen');
+                        return;
+                      }
                     }
                   }
                   provider.notificationState = value
