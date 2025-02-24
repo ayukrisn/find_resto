@@ -4,6 +4,7 @@ import 'package:find_resto/provider/settings/notification_provider.dart';
 import 'package:find_resto/provider/settings/payload_provider.dart';
 import 'package:find_resto/provider/settings/setting_provider.dart';
 import 'package:find_resto/services/local_notification_service.dart';
+import 'package:find_resto/services/permission_service.dart';
 import 'package:find_resto/services/shared_preferences_service.dart';
 import 'package:find_resto/services/workmanager_service.dart';
 import 'package:find_resto/static/settings/dark_theme_state.dart';
@@ -63,6 +64,9 @@ void main() async {
         ),
         Provider(
           create: (context) => RestaurantService(),
+        ),
+        Provider(
+          create: (context) => PermissionService(),
         ),
         Provider(
           create: (context) => LocalNotificationService()
@@ -148,10 +152,11 @@ class _MyAppState extends State<MyApp> {
     final darkThemeProvider = context.read<DarkThemeProvider>();
     final notificationProvider = context.read<NotificationProvider>();
     final settingProvider = context.read<SettingProvider>();
+    final permissionService = PermissionService();
 
     // Check permission for the notification
     bool notificationGranted =
-        await notificationProvider.requestPermissions() ?? false;
+        await permissionService.requestNotificationsPermission();
     developer.log('Notification granted: $notificationGranted',
         name: 'notification granted main');
 

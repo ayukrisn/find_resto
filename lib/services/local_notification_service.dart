@@ -6,7 +6,6 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:developer' as developer;
-import 'package:flutter/foundation.dart';
 
 final notificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -18,6 +17,7 @@ class LocalNotificationService {
 
   bool get isInitialized => _isInitialized;
 
+  /// CONFIGURE TIMEZONE
   //Initialize the timezone
   Future<void> configureLocalTimeZone() async {
     //init timezone handling
@@ -26,6 +26,7 @@ class LocalNotificationService {
     tz.setLocalLocation(tz.getLocation(currentTimeZone));
   }
 
+  /// NOTIFICATION
   //Initialize the notification
   Future<void> initNotification() async {
     if (_isInitialized) return;
@@ -59,53 +60,6 @@ class LocalNotificationService {
       },
     );
     _isInitialized = true;
-  }
-
-  //check if android permission is granted
-  Future<bool> _isAndroidPermissionGranted() async {
-    return await notificationsPlugin
-            .resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin>()
-            ?.areNotificationsEnabled() ??
-        false;
-  }
-
-  //requeste exact alarm permission for Android
-  Future<bool> _requestExactAlarmsPermission() async {
-    return await notificationsPlugin
-            .resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin>()
-            ?.requestExactAlarmsPermission() ??
-        false;
-  }
-
-//request permission for Android 13+
-  Future<bool?> requestPermissions() async {
-    if (defaultTargetPlatform == TargetPlatform.iOS) {
-      final iOSImplementation =
-          notificationsPlugin.resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>();
-      return await iOSImplementation?.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-    } else if (defaultTargetPlatform == TargetPlatform.android) {
-      final androidImplementation =
-          notificationsPlugin.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
-      final requestNotificationsPermission =
-          await androidImplementation?.requestNotificationsPermission() ??
-              false;
-      final notificationEnabled = await _isAndroidPermissionGranted();
-      final requestAlarmEnabled = await _requestExactAlarmsPermission();
-
-      return requestNotificationsPermission &&
-          notificationEnabled &&
-          requestAlarmEnabled;
-    } else {
-      return false;
-    }
   }
 
   //Notification detail setup
