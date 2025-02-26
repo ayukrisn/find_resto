@@ -16,9 +16,10 @@ void callbackDispatcher() {
     // Check uniqueName or taskName that is currently working
     if (task == MyWorkmanager.periodic.taskName) {
       final restaurantService = RestaurantService();
-      final LocalNotificationService notificationService = LocalNotificationService();
+      final LocalNotificationService notificationService =
+          LocalNotificationService();
       notificationService.initNotification();
-      
+
       Restaurant restaurant = await fetchRandomRestaurant(restaurantService);
       showRestaurantNotification(restaurant, notificationService);
     }
@@ -80,13 +81,19 @@ Future<Restaurant> fetchRandomRestaurant(
 }
 
 // Show notification
-void showRestaurantNotification(Restaurant restaurant, LocalNotificationService notificationService) async {
+Future<void>  showRestaurantNotification(
+  Restaurant restaurant,
+  LocalNotificationService notificationService,
+) async {
+  developer.log('showRestaurantNotification called!', name: 'work manager');
   notificationService.initNotification();
+  developer.log('Payload sent: ${restaurant.toJsonStr()}',
+      name: 'work manager show notif screen');
 
   await notificationService.showNotification(
-      id: UniqueKey().hashCode,
-      title: "Daily Restaurant Recommendation",
-      body: "Yuk cek ${restaurant.name} di sini!",
-      payload: restaurant.toJsonStr());
+    id: UniqueKey().hashCode,
+    title: "Daily Restaurant Recommendation",
+    body: "Yuk cek ${restaurant.name} di sini!",
+    payload: restaurant.toJsonStr(),
+  );
 }
-

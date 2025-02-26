@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:find_resto/data/model/restaurant/restaurant.dart';
 import 'package:find_resto/provider/settings/payload_provider.dart';
 import 'package:find_resto/services/local_notification_service.dart';
@@ -19,10 +21,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   void _configureSelectNotificationSubject() {
+    developer.log('The configure method is called',
+        name: 'home screen');
     selectNotificationStream.stream.listen((String? payload) {
+      developer.log('Payload received in home screen: $payload',
+        name: 'home screen');
       context.read<PayloadProvider>().payload = payload;
       if (payload != null) {
         Restaurant restaurant = Restaurant.fromJsonStr(payload);
+        developer.log('Payload received in home screen: $payload',
+        name: 'home screen');
         Navigator.pushNamed(context, NavigationRoute.detailRoute.name,
             arguments: restaurant);
       }

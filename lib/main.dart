@@ -43,11 +43,16 @@ void main() async {
   String? payload;
 
   if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
-    developer.log('It is true',
+    developer.log('There is a response to the notification',
         name: 'notificationAppLaunchDetails');
     final notificationResponse =
-        notificationAppLaunchDetails!.notificationResponse;
+        notificationAppLaunchDetails?.notificationResponse;
     payload = notificationResponse?.payload;
+    developer.log('Payload received: ${notificationResponse?.payload}',
+        name: 'notificationResponse');
+  } else {
+     developer.log('There is no response to the notification',
+        name: 'notificationAppLaunchDetails');
   }
 
   runApp(
@@ -191,6 +196,10 @@ class _MyAppState extends State<MyApp> {
     initialRoute = widget.payload == null
         ? NavigationRoute.mainRoute.name
         : NavigationRoute.detailRoute.name;
+        developer.log('initial route: $initialRoute',
+        name: 'main.dart');
+        developer.log('widget payload: ${widget.payload}',
+        name: 'main.dart');
   }
 
   // This widget is the root of your application.
